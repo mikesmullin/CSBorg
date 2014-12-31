@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Jint;
+using Renci.SshNet;
 
 namespace CSBorg
 {
@@ -9,6 +10,15 @@ namespace CSBorg
 		public static void Main (string[] args)
 		{
 			Console.WriteLine ("C# .NET/Mono can do "+ANSIColor.yellow+"colors"+ANSIColor.reset+", too!");
+
+			using (var client = new SshClient("localhost", "developer", "tunafish"))
+			{
+				client.Connect();
+				var sshResult = client.RunCommand("date");
+				Console.WriteLine(sshResult.Result);
+				client.Disconnect();
+				Console.WriteLine ("C# .NET/Mono can connect over SSH, too!");
+			}
 
 			// see also: https://github.com/sebastienros/jint
 			string CoffeeScript = File.ReadAllText(Path.Combine("resources", "coffee-script-1.8.0", "coffee-script.min.js"));
