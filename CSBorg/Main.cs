@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Jint;
 
 namespace CSBorg
@@ -10,19 +11,14 @@ namespace CSBorg
 			Console.WriteLine ("C# .NET/Mono can do "+ANSIColor.yellow+"colors"+ANSIColor.reset+", too!");
 
 			// see also: https://github.com/sebastienros/jint
-
-			var engine = new Engine()
-				.SetValue("log", new Action<object>(Console.WriteLine))
-				;
-
-			engine.Execute (@"
-				function hello() {
-					log('Hello from JavaScript!');
-				};
-
-				hello();
-			");
-
+			string CoffeeScript = File.ReadAllText(Path.Combine("resources", "coffee-script-1.8.0", "coffee-script.min.js"));
+			var result = new Engine()
+				.SetValue("__source", "a = b: c: 1")
+				.Execute(CoffeeScript + "\nCoffeeScript.compile(__source, {bare: true});")
+				.GetCompletionValue()
+				.ToObject();
+			Console.WriteLine(result);
+			Console.WriteLine("C# .NET/Mono can compile CSON, too!");
 		}
 	}
 }
